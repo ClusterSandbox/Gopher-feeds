@@ -1,4 +1,4 @@
-module github.com/ClusterSandbox/WebCrawler
+module github.com/ClusterSandbox/Gopher-feeds
 
 go 1.25.1
 

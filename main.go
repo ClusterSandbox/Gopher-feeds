@@ -11,10 +11,10 @@ import (
 )
 
 func main() {
-	fmt.Println("Welcome to the web crawler")
+	fmt.Println("Welcome to the Gopher Feeds")
 
-	godotenv.Load(".env")
-
+	godotenv.Load(".env") // loads the environment variables 
+ 
 	portString := os.Getenv("PORT")
 	if portString == "" {
 		log.Fatal("PORT is not found in the environment")
@@ -23,12 +23,19 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowedHeaders:   []string{"*"},
+		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
 		MaxAge:           300,
 	}))
+
+	v1Router := chi.NewRouter()
+	v1Router.Get("/healthz", handlerReadiness) // this path just tells if the server is running fine or not 
+
+	router.Mount("/v1", v1Router)  // we mount the v1Router to the /v1 
+	// now the url for handlerReadiness is "/v1/ready"
 
 	srv := &http.Server{
 		Addr:    ":" + portString,
