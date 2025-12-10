@@ -33,9 +33,11 @@ func main() {
 
 	v1Router := chi.NewRouter()
 	v1Router.Get("/healthz", handlerReadiness) // this path just tells if the server is running fine or not 
-
+	// this path is there to check if the server is working or not 
+	v1Router.Get("/err", handleErr)
 	router.Mount("/v1", v1Router)  // we mount the v1Router to the /v1 
-	// now the url for handlerReadiness is "/v1/ready"
+	// now the url for handlerReadiness is "/v1/healthz"
+
 
 	srv := &http.Server{
 		Addr:    ":" + portString,
